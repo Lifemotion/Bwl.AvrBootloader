@@ -1,0 +1,6 @@
+bin
+debug
+release
+arduino_nano_generic
+cfg_*
+*.atsuo
