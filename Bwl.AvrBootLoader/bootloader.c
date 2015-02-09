@@ -1,4 +1,5 @@
 
+
 #include "cfgs.h"
 
 #include <avr/boot.h>
@@ -22,7 +23,7 @@ DEV_NAME,
 DEV_GUID
 };
 
-#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)|| defined(__AVR_ATmega168PA__)
+#if defined(__AVR_ATmega88PA__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)|| defined(__AVR_ATmega168PA__)
 #else
 #error "Device not suppoted"
 #endif

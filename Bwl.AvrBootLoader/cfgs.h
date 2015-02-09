@@ -1,4 +1,8 @@
+#undef __AVR_ATmega168PA__
+#undef __AVR_ATmega328P__
+
 #ifdef CFG_TESTPLATFORM_ONE
+	#define CFG CFG_TESTPLATFORM_ONE
 	#define F_CPU 16000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 3
@@ -6,12 +10,11 @@
 	#define TX_START_MACRO 	{}
 	#define TX_END_MACRO 	{}
 	#pragma message "Loader for Bwl.TestPlatform.One, 16MHz, 9.6kHz, 3 sec"
-	#ifndef __AVR_ATmega328P__
-	#error "Wrong part"
-	#endif
+	#define __AVR_ATmega328P__
 #endif
 
 #ifdef CFG_CFMODEM_03
+	#define CFG CFG_CFMODEM_03
 	#define F_CPU 16000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 30
@@ -19,12 +22,11 @@
 	#define TX_START_MACRO 	{}
 	#define TX_END_MACRO 	{}
 	#pragma message "Loader for Cf_Modem_03 (RFM69HW), 16MHz, 9.6kHz, 30 sec"
-	#ifndef __AVR_ATmega328P__
-	#error "Wrong part"
-	#endif
+	#define __AVR_ATmega328P__
 #endif
 
 #ifdef CFG_ARDUINO_328P
+	#define CFG CFG_ARDUINO_328P
 	#define F_CPU 16000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 3
@@ -32,12 +34,11 @@
 	#define TX_START_MACRO 	{}
 	#define TX_END_MACRO 	{}
 	#pragma message "Loader for Arduino Nano 328P, 16MHz, 9.6kHz, 3 sec"
-	#ifndef __AVR_ATmega328P__
-		#error "Wrong part"
-	#endif
+	#define __AVR_ATmega328P__
 #endif
 
 #ifdef CFG_TRAFFICLIGHT_ONE
+	#define CFG CFG_TRAFFICLIGHT_ONE
 	#define F_CPU 8000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 20
@@ -45,12 +46,11 @@
 	#define TX_START_MACRO 	DDRD|=(1<<2);PORTD|=(1<<2);
 	#define TX_END_MACRO 	DDRD|=(1<<2);PORTD&=(~(1<<2));
 	#pragma message "Loader for Cleverflow TrafficLight 1.0, 8MHz, 9.6kHz, 20 sec"
-	#ifndef __AVR_ATmega168PA__
-	#error "Wrong part"
-	#endif
+	#define __AVR_ATmega168PA__
 #endif
 
 #ifdef CFG_GENERIC_AVR_PCB
+	#define CFG CFG_GENERIC_AVR_PCB
 	#define F_CPU 8000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
@@ -58,7 +58,21 @@
 	#define TX_START_MACRO 	DDRB|=(1<<5);PORTB|=(1<<5);
 	#define TX_END_MACRO 	DDRB|=(1<<5);PORTB&=(~(1<<5));
 	#pragma message "Loader for Bwl Genereic AVR PCB with USB 10.2014, 8MHz, 9.6kHz, 20 sec"
-	#ifndef __AVR_ATmega168PA__
-	#error "Wrong part"
-	#endif
+	#define __AVR_ATmega168PA__
+#endif
+
+#ifdef CFG_HITONWIRE_2013
+	#define CFG CFG_GENERIC_AVR_PCB
+	#define F_CPU 8000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "HitonWire2013"
+	#define TX_START_MACRO 	DDRB|=(1<<5);PORTB|=(1<<5);
+	#define TX_END_MACRO 	DDRB|=(1<<5);PORTB&=(~(1<<5));
+	#pragma message "Loader for Cf.MD2.r2 05.2013, ATMega88PA 4MHz, 9.6kHz, 20 sec"
+	#define __AVR_ATmega88PA__
+#endif
+
+#ifndef	CFG
+#pragma message "No configuration defined! Select one in project configuration manager and\or define new in cfgs.h"
 #endif
