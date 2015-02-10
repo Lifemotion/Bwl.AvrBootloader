@@ -75,14 +75,14 @@
 #endif
 
 #ifdef CFG_HITONWIRE_2013
-	#define CFG CFG_GENERIC_AVR_PCB
-	#define F_CPU 8000000UL
+	#define CFG CFG_HITONWIRE_2013
+	#define F_CPU 4000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
-	#define DEV_NAME "HitonWire2013"
-	#define TX_START_MACRO 	DDRB|=(1<<5);PORTB|=(1<<5);
-	#define TX_END_MACRO 	DDRB|=(1<<5);PORTB&=(~(1<<5));
-	#pragma message "Loader for Cf.MD2.r2 05.2013, ATMega88PA 4MHz, 9.6kHz, 20 sec"
+	#define DEV_NAME "Cf.MD2.r2"
+	#define TX_START_MACRO 	DDRD|=(1<<2);PORTD|=(1<<2);
+	#define TX_END_MACRO 	DDRD|=(1<<2);PORTD&=(~(1<<2));
+	#pragma message "Loader for Cf.MD2.r2 05.2013, ATMega88PA 4MHz, 9.6kHz, 10 sec"
 	#define __AVR_ATmega88PA__
 #endif
 
