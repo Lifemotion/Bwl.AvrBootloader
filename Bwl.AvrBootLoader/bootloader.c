@@ -7,8 +7,10 @@
 #include <avr/wdt.h>
 #include <util/setbaud.h>
 #include <util/delay.h>
-#include "bwl_uart.h"
-#include "bwl_simplserial.h"
+
+#include "libs/bwl_uart.c"
+#include "libs/bwl_simplserial.c"
+
 #include "../guid"
 
 volatile struct
@@ -42,7 +44,7 @@ volatile int bootloader_run_time=0;
 
 void bootloader_jump_to_main()
 {
-	boot_rww_enable_safe	();
+	//boot_rww_enable_safe	();
 	boot_spm_busy_wait ();
 	asm volatile("jmp 0x0000"::);
 }
@@ -120,7 +122,7 @@ void sserial_process_request()
 void bootloader_run_sometime()
 {
 	for (int j=0; j<BOOTLOADER_TIME; j++)
-	for (bootloader_run_time=0; bootloader_run_time<10000ul; bootloader_run_time++)
+	for (bootloader_run_time=0; bootloader_run_time<10000l; bootloader_run_time++)
 	{
 		sserial_poll_uart();
 		_delay_us(100);

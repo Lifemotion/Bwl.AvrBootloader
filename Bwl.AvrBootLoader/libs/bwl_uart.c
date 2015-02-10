@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
+#include "bwl_uart.h"
 
 void uart_init_withdivider(unsigned int ubrr)
 {

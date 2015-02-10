@@ -1,5 +1,6 @@
 #undef __AVR_ATmega168PA__
 #undef __AVR_ATmega328P__
+#undef __AVR_ATmega88PA__
 
 #ifdef CFG_TESTPLATFORM_ONE
 	#define CFG CFG_TESTPLATFORM_ONE
@@ -59,6 +60,18 @@
 	#define TX_END_MACRO 	DDRB|=(1<<5);PORTB&=(~(1<<5));
 	#pragma message "Loader for Bwl Genereic AVR PCB with USB 10.2014, 8MHz, 9.6kHz, 20 sec"
 	#define __AVR_ATmega168PA__
+#endif
+
+#ifdef CFG_GENERIC_AVR_PCB_OLD
+	#define __AVR_ATmega88PA__
+	#define CFG CFG_GENERIC_AVR_PCB_OLD
+	#define F_CPU 8000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "GenAvrPcbOLD"
+	#define TX_START_MACRO 	DDRB|=(1<<5);PORTB|=(1<<5);
+	#define TX_END_MACRO 	DDRB|=(1<<5);PORTB&=(~(1<<5));
+	#pragma message "Loader for OLD !!! Bwl Genereic AVR PCB with USB 10.2014, 8MHz, 9.6kHz, 20 sec"
 #endif
 
 #ifdef CFG_HITONWIRE_2013
