@@ -30,6 +30,8 @@ DEV_GUID
 #error "Device not suppoted"
 #endif
 
+FUSES = FUSES_VALUE;
+
 void sserial_send_start()
 {
 	TX_START_MACRO
@@ -66,6 +68,8 @@ void sserial_process_request()
 		sserial_response.data[13]=boot_signature_byte_get(2);
 		sserial_response.data[15]=boot_signature_byte_get(4);*/
 #endif
+	sserial_response.data[21]=__fuse.low;
+
 		sserial_response.data[16]=SPM_PAGESIZE>>8;
 		sserial_response.data[17]=SPM_PAGESIZE&255;
 		

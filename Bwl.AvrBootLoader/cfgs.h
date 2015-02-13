@@ -2,6 +2,8 @@
 #undef __AVR_ATmega328P__
 #undef __AVR_ATmega88PA__
 
+
+
 #ifdef CFG_TESTPLATFORM_ONE
 	#define CFG CFG_TESTPLATFORM_ONE
 	#define F_CPU 16000000UL
@@ -12,6 +14,8 @@
 	#define TX_END_MACRO 	{}
 	#pragma message "Loader for Bwl.TestPlatform.One, 16MHz, 9.6kHz, 3 sec"
 	#define __AVR_ATmega328P__
+	 #define FUSES_VALUE  { 0xDC, 0xCA , 0xFD, }// low high extended
+
 #endif
 
 #ifdef CFG_CFMODEM_03
