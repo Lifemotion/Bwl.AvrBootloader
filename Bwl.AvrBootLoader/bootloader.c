@@ -151,7 +151,7 @@ void bootloader_init()
 
 int main(void)
 {	
-	
+	bootloader_init();	
 	
 	for (byte i=0; i<16; i++)
 	{
@@ -162,7 +162,7 @@ int main(void)
 		sserial_devname[8+i]=bootloader.dev_name[i];
 		sserial_devguid[i]=bootloader.dev_guid[i];
 	}
-	bootloader_init();
+
 	bootloader_run_sometime();
 	bootloader_jump_to_main();
 }

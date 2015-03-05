@@ -5,7 +5,7 @@ copy %FILENAME%.elf %FILENAME%.elf.bak
 del *.elf /q
 cd ..
 cd Bwl.AvrBootLoader
-cd CFG_TESTPLATFORM_ONE
+cd %CFG_NAME%
 if ERRORLEVEL 1 goto fail
 ..\guidgen #define DEV_GUID
 del *.elf /q
