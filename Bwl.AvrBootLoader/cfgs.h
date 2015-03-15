@@ -47,12 +47,12 @@
 	#define CFG CFG_TRAFFICLIGHT_ONE
 	#define F_CPU 8000000UL
 	#define BAUD 9600
-	#define BOOTLOADER_TIME 20
+	#define BOOTLOADER_TIME 5
 	#define DEV_NAME "CfTrafLight1.1"
 	#define TX_START_MACRO 	DDRD|=(1<<2);PORTD|=(1<<2);
 	#define TX_END_MACRO 	DDRD|=(1<<2);PORTD&=(~(1<<2));
     #define FUSES_VALUE  { 0xFD, 0xCD , 0xF8, }// low high extended	BOOTSZ = 1024W_1C00
-	#pragma message "Loader for Cleverflow TrafficLight 1.0, 8MHz, 9.6kHz, 20 sec"
+	#pragma message "Loader for Cleverflow TrafficLight 1.1, 8MHz, 9.6kHz, 5 sec"
 	#define __AVR_ATmega168PA__
 #endif
 
