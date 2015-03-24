@@ -6,13 +6,13 @@
 
 #ifdef CFG_TESTPLATFORM_ONE
 	#define CFG CFG_TESTPLATFORM_ONE
-	#define F_CPU 16000000UL
+	#define F_CPU 8000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 3
-	#define DEV_NAME "BwlTestPl1.0"
+	#define DEV_NAME "BwlTestPl1.1*8"
 	#define TX_START_MACRO 	{}
 	#define TX_END_MACRO 	{}
-	#pragma message "Loader for Bwl.TestPlatform.One, 16MHz, 9.6kHz, 3 sec"
+	#pragma message "Loader for Bwl.TestPlatform.One, 8MHz, 9.6kHz, 3 sec"
 	#define __AVR_ATmega328P__
 	#define FUSES_VALUE  { 0xDC, 0xCA , 0xFD, }// low high extended
 #endif
