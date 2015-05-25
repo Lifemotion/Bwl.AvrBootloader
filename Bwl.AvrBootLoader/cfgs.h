@@ -69,6 +69,19 @@
 	#define __AVR_ATmega168PA__
 #endif
 
+#ifdef CFG_GENERIC_AVR_PCB_M328
+	#define CFG CFG_GENERIC_AVR_PCB
+	#define F_CPU 8000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "GenAvrPcb04.15"
+	#define TX_START_MACRO 	DDRB|=(1<<5);PORTB|=(1<<5);
+	#define TX_END_MACRO 	DDRB|=(1<<5);PORTB&=(~(1<<5));
+	#define FUSES_VALUE   {0xDC, 0xCA , 0xFD, }// low high extended
+	#pragma message "Loader for Bwl Genereic AVR PCB (mega328) with USB 04.2015, 8MHz, 9.6kHz, 10 sec"
+	#define __AVR_ATmega328P__
+#endif
+
 #ifdef CFG_GENERIC_AVR_PCB_OLD
 	#define __AVR_ATmega88PA__
 	#define CFG CFG_GENERIC_AVR_PCB_OLD

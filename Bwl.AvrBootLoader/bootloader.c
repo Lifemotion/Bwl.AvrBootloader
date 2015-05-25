@@ -20,7 +20,7 @@ unsigned char dev_name[16];
 unsigned char dev_guid[16];	
 } bootloader=
 {
-"BwlBoot:V1.0    ",
+"BwlBootV1.1:    ",
 DEV_NAME,
 DEV_GUID
 };
@@ -63,12 +63,12 @@ void sserial_process_request()
 		sserial_response.data[4]='L';
 		sserial_response.data[5]='d';
 		sserial_response.data[6]='r';*/
-#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)
-/*		sserial_response.data[11]=boot_signature_byte_get(0);
-		sserial_response.data[13]=boot_signature_byte_get(2);
-		sserial_response.data[15]=boot_signature_byte_get(4);*/
-#endif
-	sserial_response.data[21]=__fuse.low;
+		#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)
+		/*		sserial_response.data[11]=boot_signature_byte_get(0);
+				sserial_response.data[13]=boot_signature_byte_get(2);
+				sserial_response.data[15]=boot_signature_byte_get(4);*/
+		#endif
+		sserial_response.data[21]=__fuse.low;
 
 		sserial_response.data[16]=SPM_PAGESIZE>>8;
 		sserial_response.data[17]=SPM_PAGESIZE&255;
@@ -152,14 +152,14 @@ void bootloader_init()
 int main(void)
 {	
 	bootloader_init();	
-	
+	//while(1) uart_send(1);
 	for (byte i=0; i<16; i++)
 	{
 		sserial_devname[i]=bootloader.dev_prod[i];
 	}
 	for (byte i=0; i<16; i++)
 	{
-		sserial_devname[8+i]=bootloader.dev_name[i];
+		sserial_devname[12+i]=bootloader.dev_name[i];
 		sserial_devguid[i]=bootloader.dev_guid[i];
 	}
 

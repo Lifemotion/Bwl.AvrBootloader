@@ -67,9 +67,9 @@ void sserial_find_bootloader()
 	{
 		pos--;
 		found=1;
-		for (uint16_t i=0; i<8; i++)
+		for (uint16_t i=0; i<7; i++)
 		{
-			if (pgm_read_byte(pos+i)!="BwlBoot:"[i]){found=0;i=8;}
+			if (pgm_read_byte(pos+i)!="BwlBoot"[i]){found=0;i=8;}
 		}
 	} while ((found==0)&&(pos>FLASHEND-512));
 	
@@ -127,6 +127,38 @@ void sserial_send_response ()
 
 char sserial_process_internal()
 {
+	/*if (sserial_request.command==249)
+	{
+		byte match=1;
+		for (byte i=0; i<16; i++)
+		{
+			if (sserial_devguid[i]<sserial_request.data[i]){match=0;}
+			if (sserial_devguid[i]>sserial_request.data[16+i]){match=0;}			
+		}
+	if (match)
+	{
+		uart_send(sserial_request.data[32]);
+	}
+	}
+	*/
+	if (sserial_request.command==255)
+	{
+		byte delay=sserial_request.data[1];
+		for (byte i=0; i<16; i++)
+		{
+			delay^=sserial_devguid[i];
+			sserial_response.data[i]=sserial_devguid[i];
+		}
+		for (byte j=0; j<delay; j++)
+		{
+			_delay_ms(10.0);
+		}
+		sserial_response.result=170;
+		sserial_response.datalength=16;
+		sserial_send_response();
+		return 1;		
+	}
+	
 	//device info
 	if (sserial_request.command==254)
 	{
@@ -182,15 +214,14 @@ char sserial_process_internal()
 	{
 		sserial_response.datalength=0;
 		sserial_response.result=0;
-		if (sserial_request.data[0]==1)
+		/*if (sserial_request.data[0]==1)
 		{
 			sserial_send_response();
 			sserial_send_response();
 			asm volatile("jmp 0x0000"::);
-		}
+		}*/
 		if (sserial_request.data[0]==2)
 		{
-			sserial_send_response();
 			sserial_send_response();
 			asm volatile("jmp 0x7800"::);
 		}
