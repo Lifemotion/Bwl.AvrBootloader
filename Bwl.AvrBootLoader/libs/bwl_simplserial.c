@@ -109,7 +109,6 @@ void sserial_send_response ()
 	sserial_sendbyte(sserial_address>>8);
 	sserial_sendbyte(sserial_address&255);
 	sserial_sendbyte(sserial_response.result);
-	
 	for (unsigned int i=0; i< sserial_response.datalength; i++)
 	{
 		sserial_sendbyte(sserial_response.data[i]);
@@ -158,7 +157,6 @@ char sserial_process_internal()
 		sserial_send_response();
 		return 1;		
 	}
-	
 	//device info
 	if (sserial_request.command==254)
 	{
@@ -167,7 +165,6 @@ char sserial_process_internal()
 			sserial_response.data[i]=sserial_devguid[i];
 			sserial_response.data[16+i]=sserial_devname[i];
 			sserial_response.data[32+i]=sserial_devname[16+i];
-			
 		}
 		sserial_response.data[48]=__DATE__[4];
 		sserial_response.data[48+1]=__DATE__[5];
@@ -214,17 +211,17 @@ char sserial_process_internal()
 	{
 		sserial_response.datalength=0;
 		sserial_response.result=0;
-		/*if (sserial_request.data[0]==1)
+		if (sserial_request.data[0]==1)
 		{
 			sserial_send_response();
 			sserial_send_response();
-			asm volatile("jmp 0x0000"::);
-		}*/
-		if (sserial_request.data[0]==2)
-		{
-			sserial_send_response();
-			asm volatile("jmp 0x7800"::);
+			GOTO_PROG
 		}
+		/*if (sserial_request.data[0]==2)
+		{
+			sserial_send_response();
+			GOTO_BOOT
+		}*/
 		return 1;
 	}
 	//in-out control
@@ -270,9 +267,7 @@ void sserial_poll_uart()
 	{
 		static byte lastbyte;
 		byte currbyte=uart_get();
-		
 		if (sserial_buffer_pointer>=SSERIAL_BUFFER_SIZE){sserial_buffer_pointer=SSERIAL_BUFFER_SIZE-1;sserial_buffer_overflow=1;}
-		
 		if (lastbyte==0x98)
 		{
 			switch (currbyte)
@@ -308,7 +303,6 @@ void sserial_poll_uart()
 						}
 					}
 				}
-				
 			}
 		}else
 		{
@@ -317,5 +311,4 @@ void sserial_poll_uart()
 		}
 		lastbyte=currbyte;
 	}
-	
 }

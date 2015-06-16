@@ -1,5 +1,3 @@
-
-
 #include "cfgs.h"
 
 #include <avr/boot.h>
@@ -25,10 +23,6 @@ DEV_NAME,
 DEV_GUID
 };
 
-#if defined(__AVR_ATmega88PA__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)|| defined(__AVR_ATmega168PA__)
-#else
-#error "Device not suppoted"
-#endif
 
 FUSES = FUSES_VALUE;
 
@@ -46,13 +40,15 @@ volatile int bootloader_run_time=0;
 
 void bootloader_jump_to_main()
 {
-	//boot_rww_enable_safe	();
 	boot_spm_busy_wait ();
-	asm volatile("jmp 0x0000"::);
+	GOTO_PROG
 }
 
 void sserial_process_request()
 {
+	sserial_response.datalength=1;
+	sserial_response.data[0]=0;
+	
 	if (sserial_request.command==100)
 	{
 		sserial_response.result=101;
@@ -88,8 +84,6 @@ void sserial_process_request()
 		boot_page_erase_safe(pageaddr);
 		boot_spm_busy_wait ();
 		sserial_response.result=103;
-		sserial_response.datalength=1;
-		sserial_response.data[0]=0;
 		bootloader_run_time=0;
 		sserial_send_response();
 	}
@@ -104,8 +98,6 @@ void sserial_process_request()
 			boot_page_fill_safe(pageaddr+wordoffset+i,word1);
 		}
 		sserial_response.result=105;
-		sserial_response.datalength=1;
-		sserial_response.data[0]=0;
 		bootloader_run_time=0;
 		sserial_send_response();
 	}
@@ -116,8 +108,6 @@ void sserial_process_request()
 		boot_page_write_safe(pageaddr);
 		boot_spm_busy_wait ();
 		sserial_response.result=107;
-		sserial_response.datalength=1;
-		sserial_response.data[0]=0;
 		bootloader_run_time=0;
 		sserial_send_response();
 	}
@@ -152,7 +142,6 @@ void bootloader_init()
 int main(void)
 {	
 	bootloader_init();	
-	//while(1) uart_send(1);
 	for (byte i=0; i<16; i++)
 	{
 		sserial_devname[i]=bootloader.dev_prod[i];
@@ -162,7 +151,6 @@ int main(void)
 		sserial_devname[12+i]=bootloader.dev_name[i];
 		sserial_devguid[i]=bootloader.dev_guid[i];
 	}
-
 	bootloader_run_sometime();
 	bootloader_jump_to_main();
 }

@@ -2,8 +2,6 @@
 #undef __AVR_ATmega328P__
 #undef __AVR_ATmega88PA__
 
-
-
 #ifdef CFG_TESTPLATFORM_ONE
 	#define CFG CFG_TESTPLATFORM_ONE
 	#define F_CPU 8000000UL
@@ -95,17 +93,42 @@
 #endif
 
 #ifdef CFG_HITONWIRE_2013
+	#define __AVR_ATmega88PA__
 	#define CFG CFG_HITONWIRE_2013
 	#define F_CPU 4000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
-	#define DEV_NAME "Cf.MD2.r2"
+	#define DEV_NAME "Cf.HitonWire1.0"
 	#define TX_START_MACRO 	DDRD|=(1<<2);PORTD|=(1<<2);
 	#define TX_END_MACRO 	DDRD|=(1<<2);PORTD&=(~(1<<2));
-	#pragma message "Loader for Cf.MD2.r2 05.2013, ATMega88PA 4MHz, 9.6kHz, 10 sec"
-	#define __AVR_ATmega88PA__
+	#define FUSES_VALUE   {0xDC,0xCC , 0xF8, }// low high extended
+	#pragma message "Loader for Cf.HitonWire1.0 (Cf.MD2.r2) 05.2013, ATMega88PA 4MHz, 9.6kHz, 10 sec"
 #endif
 
 #ifndef	CFG
 #pragma message "No configuration defined! Select one in project configuration manager and\or define new in cfgs.h"
 #endif
+
+#if defined(__AVR_ATmega88PA__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)|| defined(__AVR_ATmega168PA__)
+#else
+#error "Device not suppoted"
+#endif
+
+
+#if defined(__AVR_ATmega88PA__)
+#define GOTO_PROG 	asm volatile("rjmp 0x0000"::);
+#define GOTO_BOOT 	asm volatile("rjmp 0x0000"::);
+#endif
+
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)
+#define GOTO_PROG 	asm volatile("rjmp 0x0000"::);
+#define GOTO_BOOT 	asm volatile("rjmp 0x0000"::);
+#endif
+
+#if  defined(__AVR_ATmega168PA__)
+#define GOTO_PROG 	asm volatile("jmp 0x0000"::);
+#define GOTO_BOOT 	asm volatile("jmp 0x0000"::);
+#endif
+
+//#define GOTO_PROG 	{}
+//#define GOTO_BOOT 	{}
