@@ -1,5 +1,5 @@
 call paths.cmd
-echo off8
+echo off
 cls
 copy %FILENAME%.elf %FILENAME%.elf.bak
 del *.elf /q
