@@ -7,3 +7,6 @@ arduino_nano_generic
 cfg_*
 *.atsuo
 guid
+*.log1
+*.log2
+&.log
