@@ -1,5 +1,5 @@
 call paths.cmd
-echo off
+echo off8
 cls
 copy %FILENAME%.elf %FILENAME%.elf.bak
 del *.elf /q
@@ -27,3 +27,5 @@ goto end
 :end
 cd ..\..
 cd autobuild
+
+exit

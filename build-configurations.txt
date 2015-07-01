@@ -1,0 +1,3 @@
+Bwl.AvrBootLoader
+trafficlight;autobuild\trafficlight-compile.cmd;autobuild\boot_trafficlight.elf;compile ok!
+gap;autobuild\gap-compile.cmd;autobuild\boot_gap.elf;compile ok!

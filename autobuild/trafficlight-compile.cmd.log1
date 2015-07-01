@@ -1,0 +1,6 @@
+
+D:\Web\BuildServ\repos\Bwl.AvrBootloader\autobuild>set CFG_NAME=CFG_TRAFFICLIGHT_ONE 
+
+D:\Web\BuildServ\repos\Bwl.AvrBootloader\autobuild>set FILENAME=boot_trafficlight 
+
+D:\Web\BuildServ\repos\Bwl.AvrBootloader\autobuild>start compile-stub.cmd 
