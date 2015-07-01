@@ -37,8 +37,7 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
-    <avrtool>
-    </avrtool>
+    <avrtool>com.atmel.avrdbg.tool.jtagice3plus</avrtool>
     <com_atmel_avrdbg_tool_jtagice3plus>
       <ToolOptions>
         <InterfaceProperties>

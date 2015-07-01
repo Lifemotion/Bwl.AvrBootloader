@@ -46,7 +46,7 @@
 	#define F_CPU 8000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 5
-	#define DEV_NAME "CfTrafLight1.1"
+	#define DEV_NAME "CfTrafLight1.2"
 	#define TX_START_MACRO 	DDRD|=(1<<2);PORTD|=(1<<2);
 	#define TX_END_MACRO 	DDRD|=(1<<2);PORTD&=(~(1<<2));
     #define FUSES_VALUE  { 0xFD, 0xCD , 0xF8, }// low high extended	BOOTSZ = 1024W_1C00
