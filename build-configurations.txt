@@ -2,3 +2,4 @@ Bwl.AvrBootLoader
 trafficlight;autobuild\trafficlight-compile.cmd;autobuild\boot_trafficlight.elf;compile ok!
 gap;autobuild\gap-compile.cmd;autobuild\boot_gap.elf;compile ok!
 arduinonano;autobuild\arduinonano-compile.cmd;autobuild\arduinonano.elf;compile ok!
+hw2013;autobuild\hitonwire2013-compile.cmd;autobuild\boot_hw2013.elf;compile ok!
