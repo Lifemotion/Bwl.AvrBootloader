@@ -45,10 +45,13 @@ int main(void)
 	}
 }
 */
+#include <util/delay.h>
 
 #include <avr/io.h>
 #include "bwl_simplserial.h"
 #include <util/crc16.h>
+#include <avr/wdt.h>
+
 #include <avr/pgmspace.h>
 
 #define CATUART_ADDITIONAL 8
@@ -58,6 +61,15 @@ unsigned int sserial_buffer_pointer;
 unsigned char sserial_buffer_overflow;
 uint16_t sserial_crc16=0xFFFF;
 byte sserial_bootloader_present=0;
+
+void sserial_append_devname(byte startIndex, byte length, char* newname)
+{
+	for (int i=0; i<length; i++)
+	{
+		if (sserial_devname[i]<30){sserial_devname[i]=' ';}
+		sserial_devname[i+startIndex]=newname[i];
+	}
+}
 
 void sserial_find_bootloader()
 {
@@ -89,6 +101,15 @@ void sserial_find_bootloader()
 	pgm_read_byte(pos);
 }
 
+void sserial_setdevname(const char* devname)
+{
+	for (int i=0; i<16; i++)
+	{
+		if (sserial_devname[i]<30){sserial_devname[i]=' ';}
+		sserial_devname[i+16]=devname[i];
+	}
+}
+
 void sserial_sendbyte(byte bt)
 {
 	uart_send(bt);sserial_crc16=_crc16_update(sserial_crc16,bt);
@@ -97,6 +118,7 @@ void sserial_sendbyte(byte bt)
 		uart_send(0);//sserial_crc16=_crc16_update(sserial_crc16,0);
 	}
 }
+
 
 void sserial_send_response ()
 {
@@ -124,6 +146,13 @@ void sserial_send_response ()
 	sserial_send_end();
 }
 
+byte mask(byte current, byte newval ,byte mask)
+{
+	byte result=current&(~mask);
+	result|=(newval&mask);
+	return result;
+}
+
 char sserial_process_internal()
 {
 	/*if (sserial_request.command==249)
@@ -142,15 +171,25 @@ char sserial_process_internal()
 	*/
 	if (sserial_request.command==255)
 	{
-		byte delay=sserial_request.data[1];
+		byte byte1=sserial_request.data[1];
+		byte byte2=sserial_request.data[2];
+		byte byte3=sserial_request.data[3];
+		byte byte4=sserial_request.data[4];
+		byte delay1=byte1;
+		byte delay2=byte2;	
 		for (byte i=0; i<16; i++)
 		{
-			delay^=sserial_devguid[i];
+			delay1^=sserial_devguid[i];
+			delay2^=sserial_devguid[i];
+			delay1+=byte3;
+			delay2+=byte4;
 			sserial_response.data[i]=sserial_devguid[i];
 		}
-		for (byte j=0; j<delay; j++)
+		int total=(((int)delay1)<<4)+(int)delay2;
+	
+		for (int j=0; j<total; j++)
 		{
-			_delay_ms(10.0);
+			_delay_ms(0.5);
 		}
 		sserial_response.result=170;
 		sserial_response.datalength=16;
@@ -180,17 +219,21 @@ char sserial_process_internal()
 	//set working address
 	if (sserial_request.command==253)
 	{
-		byte flag=1;
+		byte guid_match=1;
+		uint16_t new_address=(sserial_request.data[16]<<8)+sserial_request.data[17];
 		for (byte i=0; i<16; i++)
 		{
-			if(sserial_request.data[i]!=sserial_devguid[i]){flag=0;}
+			if(sserial_request.data[i]!=sserial_devguid[i]){guid_match=0;}
 		}
-		if (flag==1)
+		if (guid_match==1)
 		{
-			sserial_address=(sserial_request.data[16]<<8)+sserial_request.data[17];
+			sserial_address=new_address;
 			sserial_response.datalength=0;
 			sserial_response.result=0;
 			sserial_send_response();
+		}else
+		{
+			if (new_address==sserial_address){sserial_address=0;}
 		}
 		return 1;
 	}
@@ -229,14 +272,23 @@ char sserial_process_internal()
 	{
 		if (sserial_request.data[0]==1)
 		{
-			DDRB=	sserial_request.data[4];
+			DDRB=	mask (DDRB ,sserial_request.data[4],sserial_request.data[6]);
+			PORTB=	mask (PORTB,sserial_request.data[5],sserial_request.data[6]);
+			
+			DDRC=	mask (DDRC ,sserial_request.data[7],sserial_request.data[9]);
+			PORTC=	mask (PORTC,sserial_request.data[8],sserial_request.data[9]);
+			
+			DDRD=	mask (DDRD ,sserial_request.data[10],sserial_request.data[12]);
+			PORTD=	mask (PORTD ,sserial_request.data[11],sserial_request.data[12]);
+		
+			/*DDRB=	sserial_request.data[4];
 			PORTB=	sserial_request.data[5];
 			
 			DDRC=	sserial_request.data[7];
 			PORTC=	sserial_request.data[8];
-			
+
 			DDRD=	sserial_request.data[10];
-			PORTD=	sserial_request.data[11];
+			PORTD=	sserial_request.data[11];		*/	
 		}
 		if (sserial_request.data[0]==2)
 		{
@@ -267,7 +319,9 @@ void sserial_poll_uart()
 	{
 		static byte lastbyte;
 		byte currbyte=uart_get();
+		
 		if (sserial_buffer_pointer>=SSERIAL_BUFFER_SIZE){sserial_buffer_pointer=SSERIAL_BUFFER_SIZE-1;sserial_buffer_overflow=1;}
+		
 		if (lastbyte==0x98)
 		{
 			switch (currbyte)
@@ -303,6 +357,7 @@ void sserial_poll_uart()
 						}
 					}
 				}
+				
 			}
 		}else
 		{
@@ -311,4 +366,5 @@ void sserial_poll_uart()
 		}
 		lastbyte=currbyte;
 	}
+	
 }

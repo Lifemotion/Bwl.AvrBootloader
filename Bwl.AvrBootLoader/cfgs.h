@@ -110,12 +110,6 @@
 #pragma message "No configuration defined! Select one in project configuration manager and\or define new in cfgs.h"
 #endif
 
-#if defined(__AVR_ATmega88PA__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__)|| defined(__AVR_ATmega168PA__)
-#else
-#error "Device not suppoted"
-#endif
-
-
 #if defined(__AVR_ATmega88PA__)
 #define GOTO_PROG 	asm volatile("rjmp 0x0000"::);
 #define GOTO_BOOT 	asm volatile("rjmp 0x0000"::);
@@ -126,9 +120,13 @@
 #define GOTO_BOOT 	asm volatile("rjmp 0x0000"::);
 #endif
 
-#if  defined(__AVR_ATmega168PA__)
+#if  defined(__AVR_ATmega168PA__) 
 #define GOTO_PROG 	asm volatile("jmp 0x0000"::);
 #define GOTO_BOOT 	asm volatile("jmp 0x0000"::);
+#endif
+
+#ifndef GOTO_PROG
+#error "Device not suppoted"
 #endif
 
 //#define GOTO_PROG 	{}

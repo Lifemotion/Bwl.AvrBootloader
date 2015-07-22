@@ -18,7 +18,7 @@ unsigned char dev_name[16];
 unsigned char dev_guid[16];	
 } bootloader=
 {
-"BwlBootV1.1:    ",
+"BwlBootV1.2:    ",
 DEV_NAME,
 DEV_GUID
 };
