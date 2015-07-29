@@ -4,7 +4,7 @@ cls
 copy %FILENAME%.elf %FILENAME%.elf.bak
 del *.elf /q
 cd ..
-cd Bwl.AvrBootLoader
+cd Bwl.SimplSerial.AvrBootLoader
 cd %CFG_NAME%
 if ERRORLEVEL 1 goto fail
 ..\guidgen #define DEV_GUID
@@ -12,7 +12,7 @@ del *.elf /q
 make clean
 make all
 if ERRORLEVEL 1 goto fail
-copy Bwl.AvrBootLoader.elf ..\..\autobuild\%FILENAME%.elf
+copy Bwl.SimplSerial.AvrBootLoader.elf ..\..\autobuild\%FILENAME%.elf
 cat ..\..\guid
 echo.
 echo.
