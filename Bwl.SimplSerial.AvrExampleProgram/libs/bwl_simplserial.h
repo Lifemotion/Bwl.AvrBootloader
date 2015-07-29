@@ -4,7 +4,7 @@
  * Author: Igor Koshelev 
  * Licensed: open-source Apache license
  *
- * Version: 29.07.2015 V1.3
+ * Version: 29.07.2015 V1.3.1
  */ 
 #ifndef BWL_GAPUART_H_
 #define BWL_GAPUART_H_
@@ -20,6 +20,7 @@ byte sserial_bootname[16];
 byte sserial_bootloader_present;
 uint16_t sserial_address;
 
+#define SSERIAL_VERSION "V1.3.1"
 #define CATUART_MAX_PACKET_LENGTH 128
 
 struct
@@ -50,6 +51,7 @@ void var_delay_ms(int ms);
 void sserial_poll_uart();
 void sserial_send_response();
 void sserial_find_bootloader();
+void sserial_append_devname(byte startIndex, byte length, char* newname);
 
 #endif /* BWL_GAPUART_H_ */
 
