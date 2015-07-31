@@ -102,7 +102,7 @@
 	#define DEV_NAME "Cf.HitonWire1.0"
 	#define TX_START_MACRO 	DDRD|=(1<<2);PORTD|=(1<<2);
 	#define TX_END_MACRO 	DDRD|=(1<<2);PORTD&=(~(1<<2));
-	#define FUSES_VALUE   {0xDC,0xCD,0xF9 }// low high extended
+	#define FUSES_VALUE   {0xDC,0xCD,0xF8 }// low high extended
 	#pragma message "Loader for Cf.HitonWire1.0 (Cf.MD2.r2) 05.2013, ATMega88PA 4MHz, 9.6kHz, 10 sec"
 #endif
 
