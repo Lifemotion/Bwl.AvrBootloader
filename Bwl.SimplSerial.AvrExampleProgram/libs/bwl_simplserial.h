@@ -46,7 +46,12 @@ void uart_send( unsigned char);
 unsigned char uart_get( void );
 unsigned char uart_received( void );
 void var_delay_ms(int ms);
-
+/*
+void var_delay_ms(int ms)
+{
+	for (int i=0; i<ms; i++)_delay_ms(1.0);
+}
+*/
 //вызывать
 void sserial_poll_uart();
 void sserial_send_response();

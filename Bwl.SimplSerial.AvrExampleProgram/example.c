@@ -14,8 +14,9 @@ void sserial_send_end()
 	
 void var_delay_ms(int ms)
 {
-	_delay_ms(1.0);
+	for (int i=0; i<ms; i++)_delay_ms(1.0);
 }
+
 
 void sserial_process_request()
 {

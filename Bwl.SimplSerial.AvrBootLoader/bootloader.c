@@ -24,7 +24,10 @@ DEV_NAME,
 DEV_GUID
 };
 
-void var_delay_ms(int ms){_delay_ms(1.0);}
+void var_delay_ms(int ms)
+{
+	for (int i=0; i<ms; i++)_delay_ms(1.0);
+}
 
 FUSES = FUSES_VALUE;
 
