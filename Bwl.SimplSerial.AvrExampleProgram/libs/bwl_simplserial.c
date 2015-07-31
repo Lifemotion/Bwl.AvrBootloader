@@ -215,7 +215,7 @@ char sserial_process_internal()
 		#endif 
 		#endif
 		
-		if (sserial_request.data[0]==255){wdt_enable(WDTO_250MS); while(1);}	
+		if (sserial_request.data[0]==255){wdt_enable(WDTO_500MS); while(1);}	
 	}
 	//in-out control
 	if (sserial_request.command==250)
