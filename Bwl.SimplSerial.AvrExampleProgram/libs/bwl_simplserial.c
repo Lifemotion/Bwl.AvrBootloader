@@ -4,7 +4,7 @@
  * Author: Igor Koshelev 
  * Licensed: open-source Apache license
  *
- * Version: 29.07.2015 V1.3.1
+ * Version: 27.04.2016 V1.3.2 (single-port)
  */ 
 
 #include "bwl_simplserial.h"
@@ -158,11 +158,12 @@ char sserial_process_internal()
 			{
 				sserial_response.data[54+i]=sserial_bootname[i];
 			}
+
+		#endif
 			for (byte i=0; i<6; i++)
 			{
 				sserial_response.data[70+i]=SSERIAL_VERSION[i];
-			}
-		#endif
+			}		
 		sserial_response.datalength=86;
 		sserial_send_response();
 		return 1;

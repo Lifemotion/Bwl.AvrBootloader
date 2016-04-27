@@ -4,8 +4,9 @@
  * Author: Igor Koshelev 
  * Licensed: open-source Apache license
  *
- * Version: 29.07.2015 V1.3.1
+ * Version: 27.04.2016 V1.3.2 (single-port)
  */ 
+
 #ifndef BWL_GAPUART_H_
 #define BWL_GAPUART_H_
 
@@ -20,7 +21,7 @@ byte sserial_bootname[16];
 byte sserial_bootloader_present;
 uint16_t sserial_address;
 
-#define SSERIAL_VERSION "V1.3.1"
+#define SSERIAL_VERSION "V1.3.2"
 #define CATUART_MAX_PACKET_LENGTH 128
 
 struct
@@ -52,6 +53,7 @@ void var_delay_ms(int ms)
 	for (int i=0; i<ms; i++)_delay_ms(1.0);
 }
 */
+
 //вызывать
 void sserial_poll_uart();
 void sserial_send_response();
@@ -73,4 +75,9 @@ void sserial_append_devname(byte startIndex, byte length, char* newname);
 #if  defined(__AVR_ATmega168PA__)
 #define GOTO_PROG 	asm volatile("jmp 0x0000"::);
 #define GOTO_BOOT 	asm volatile("jmp 0x3800"::);
+#endif
+
+#if defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__)
+#define GOTO_PROG 	asm volatile("jmp 0x0000"::);
+#define GOTO_BOOT 	asm volatile("jmp 0x7800"::);
 #endif

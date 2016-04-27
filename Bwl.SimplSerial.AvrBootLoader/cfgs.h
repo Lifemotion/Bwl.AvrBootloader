@@ -1,6 +1,7 @@
 #undef __AVR_ATmega168PA__
 #undef __AVR_ATmega328P__
 #undef __AVR_ATmega88PA__
+#undef __AVR_ATmega324PA__
 
 #ifdef CFG_TESTPLATFORM_ONE
 	#define CFG CFG_TESTPLATFORM_ONE
@@ -32,13 +33,13 @@
 	#define CFG CFG_ARDUINO_328P
 	#define F_CPU 16000000UL
 	#define BAUD 9600
-	#define BOOTLOADER_TIME 2
+	#define BOOTLOADER_TIME 3
 	#define DEV_NAME "Arduino328P"
 	#define TX_START_MACRO 	{}
 	#define TX_END_MACRO 	{}
-	#define FUSES_VALUE  { 0xDC, 0xCA , 0xFD, }// low high extended
 	#pragma message "Loader for Arduino Nano 328P, 16MHz, 9.6kHz, 3 sec"
 	#define __AVR_ATmega328P__
+	#define FUSES_VALUE  { 0xDC, 0xCA , 0xFD, }// low high extended
 #endif
 
 #ifdef CFG_TRAFFICLIGHT_ONE
@@ -106,7 +107,32 @@
 	#pragma message "Loader for Cf.HitonWire1.0 (Cf.MD2.r2) 05.2013, ATMega88PA 4MHz, 9.6kHz, 10 sec"
 #endif
 
+#ifdef CFG_M324_GENERIC
+	#define __AVR_ATmega324PA__
+	#define CFG CFG_M324_GENERIC
+	#define F_CPU 8000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 3
+	#define DEV_NAME "Mega324-8MHz"
+	#define TX_START_MACRO 	{};
+	#define TX_END_MACRO 	{};
+	#define FUSES_VALUE   {0xDE,0x92,0xFD }// low high extended
+	#pragma message "Loader for generic ATMega328PA 8MHz, 9.6kHz, 3 sec"
+#endif
+
+#ifdef CFG_M324_GENERIC_16MHZ
+	#define __AVR_ATmega324PA__
+	#define CFG CFG_M324_GENERIC_16MHZ
+	#define F_CPU 16000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 3
+	#define DEV_NAME "Mega324-16MHz"
+	#define TX_START_MACRO 	{};
+	#define TX_END_MACRO 	{};
+	#define FUSES_VALUE   {0xDE,0x92,0xFD }// low high extended
+	#pragma message "Loader for generic ATMega328PA 16MHz, 9.6kHz, 3 sec"
+#endif
+
 #ifndef	CFG
 #pragma message "No configuration defined! Select one in project configuration manager and\or define new in cfgs.h"
 #endif
-
