@@ -112,7 +112,7 @@
 	#define CFG CFG_M324_GENERIC
 	#define F_CPU 8000000UL
 	#define BAUD 9600
-	#define BOOTLOADER_TIME 3
+	#define BOOTLOADER_TIME 10
 	#define DEV_NAME "Mega324-8MHz"
 	#define TX_START_MACRO 	{};
 	#define TX_END_MACRO 	{};
@@ -125,7 +125,7 @@
 	#define CFG CFG_M324_GENERIC_16MHZ
 	#define F_CPU 16000000UL
 	#define BAUD 9600
-	#define BOOTLOADER_TIME 3
+	#define BOOTLOADER_TIME 10
 	#define DEV_NAME "Mega324-16MHz"
 	#define TX_START_MACRO 	{};
 	#define TX_END_MACRO 	{};
