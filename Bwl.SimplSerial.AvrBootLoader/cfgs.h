@@ -2,6 +2,7 @@
 #undef __AVR_ATmega328P__
 #undef __AVR_ATmega88PA__
 #undef __AVR_ATmega324PA__
+#undef __AVR_ATmega2560__
 
 #ifdef CFG_TESTPLATFORM_ONE
 	#define CFG CFG_TESTPLATFORM_ONE
@@ -117,7 +118,7 @@
 	#define TX_START_MACRO 	{};
 	#define TX_END_MACRO 	{};
 	#define FUSES_VALUE   {0xDE,0x92,0xFD }// low high extended
-	#pragma message "Loader for generic ATMega328PA 8MHz, 9.6kHz, 3 sec"
+	#pragma message "Loader for generic ATMega328PA 8MHz, 9.6kHz, 10 sec"
 #endif
 
 #ifdef CFG_M324_GENERIC_16MHZ
@@ -130,7 +131,20 @@
 	#define TX_START_MACRO 	{};
 	#define TX_END_MACRO 	{};
 	#define FUSES_VALUE   {0xDE,0x92,0xFD }// low high extended
-	#pragma message "Loader for generic ATMega328PA 16MHz, 9.6kHz, 3 sec"
+	#pragma message "Loader for generic ATMega328PA 16MHz, 9.6kHz, 10 sec"
+#endif
+
+#ifdef CFG_M2560_GENERIC
+	#define __AVR_ATmega2560__
+	#define CFG CFG_M2560_GENERIC
+	#define F_CPU 8000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "Mega2560-8MHz"
+	#define TX_START_MACRO 	{};
+	#define TX_END_MACRO 	{};
+	#define FUSES_VALUE   {0xDE,0x92,0xFD }// low high extended
+	#pragma message "Loader for generic ATMega2560 8MHz, 9.6kHz, 10 sec"
 #endif
 
 #ifndef	CFG

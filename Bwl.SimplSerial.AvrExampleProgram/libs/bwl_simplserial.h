@@ -81,3 +81,8 @@ void sserial_append_devname(byte startIndex, byte length, char* newname);
 #define GOTO_PROG 	asm volatile("jmp 0x0000"::);
 #define GOTO_BOOT 	asm volatile("jmp 0x7800"::);
 #endif
+
+#if defined(__AVR_ATmega2560__)
+#define GOTO_PROG 	asm volatile("jmp 0x00000"::);
+#define GOTO_BOOT 	asm volatile("jmp 0x3F000"::);
+#endif
