@@ -4,7 +4,7 @@
  * Author: Igor Koshelev 
  * Licensed: open-source Apache license
  *
- * Version: 27.04.2016 V1.3.2 (single-port)
+ * Version: 01.05.2016 V1.5.0
  */ 
 
 #include "bwl_simplserial.h"
@@ -18,6 +18,7 @@ unsigned int sserial_buffer_pointer;
 unsigned char sserial_buffer_overflow;
 uint16_t sserial_crc16;
 byte sserial_bootloader_present=0;
+byte sserial_portindex=0;
 
 void sserial_append_devname(byte startIndex, byte length, char* newname)
 {
@@ -28,61 +29,70 @@ void sserial_append_devname(byte startIndex, byte length, char* newname)
 	}
 }
 
+
+#ifdef __AVR_ATmega2560__
+#define PGM_READ_BYTE pgm_read_byte_far
+#else
+#define PGM_READ_BYTE pgm_read_byte_near
+#endif
+
 void sserial_find_bootloader()
 {
 	byte found=0;
-	uint16_t pos=FLASHEND-32;
+	uint32_t pos=FLASHEND-32;
 	do
 	{
 		pos--;
 		found=1;
-		for (uint16_t i=0; i<7; i++)
+		for (uint32_t i=0; i<7; i++)
 		{
-			if (pgm_read_byte(pos+i)!="BwlBoot"[i]){found=0;i=8;}
+			uint32_t p=pos+i;
+			if (PGM_READ_BYTE(p)!="BwlBoot"[i]){found=0;i=8;}
 		}
-	} while ((found==0)&&(pos>FLASHEND-512));
+	} while ((found==0)&&(pos>FLASHEND-4096));
 	
 	if (found==1)
 	{
 		for (byte i=0; i<16; i++)
 		{
-			sserial_devname[i]=pgm_read_byte(pos+16+i);
-			sserial_devguid[i]=pgm_read_byte(pos+32+i);
+			sserial_devname[i]=PGM_READ_BYTE(pos+16+i);
+			sserial_devguid[i]=PGM_READ_BYTE(pos+32+i);
 		}
 		for (byte i=0; i<16; i++)
 		{
-			sserial_bootname[i]=pgm_read_byte(pos+i);			
+			sserial_bootname[i]=PGM_READ_BYTE(pos+i);			
 		}
 	}
 	sserial_bootloader_present=found;
-	pgm_read_byte(pos);
 }
 
-void sserial_setdevname(const char* devname)
+void sserial_set_devname(const char* devname)
 {
-	for (int i=0; i<16; i++)
+	for (int i=0; i<32; i++)
 	{
 		if (sserial_devname[i]<30){sserial_devname[i]=' ';}
-		sserial_devname[i+16]=devname[i];
+		sserial_devname[i]=devname[i];
 	}
 }
 
+
+
 void sserial_sendbyte(byte bt)
 {
-	uart_send(bt);sserial_crc16=_crc16_update(sserial_crc16,bt);
+	uart_send(sserial_portindex,bt);sserial_crc16=_crc16_update(sserial_crc16,bt);
 	if (bt==0x98)
 	{
-		uart_send(0);
+		uart_send(sserial_portindex,0);
 	}
 }
 
 void sserial_send_response ()
 {
 	sserial_send_start();
-	uart_send(0);
-	uart_send(0);
-	uart_send(0x98);
-	uart_send(0x03);
+	uart_send(sserial_portindex,0);
+	uart_send(sserial_portindex,0);
+	uart_send(sserial_portindex,0x98);
+	uart_send(sserial_portindex,0x03);
 	sserial_crc16=0xFFFF;
 	sserial_sendbyte(sserial_address>>8);
 	sserial_sendbyte(sserial_address&255);
@@ -94,11 +104,11 @@ void sserial_send_response ()
 	uint16_t crc=sserial_crc16;
 	sserial_sendbyte(crc>>8);
 	sserial_sendbyte(crc&255);
-	uart_send(0x98);
-	uart_send(0x04);
-	uart_send(0);
-	uart_send(0);
-	uart_send(0);
+	uart_send(sserial_portindex,0x98);
+	uart_send(sserial_portindex,0x04);
+	uart_send(sserial_portindex,0);
+	uart_send(sserial_portindex,0);
+	uart_send(sserial_portindex,0);
 	sserial_send_end();
 }
 
@@ -153,17 +163,14 @@ char sserial_process_internal()
 		sserial_response.data[48+3]=__DATE__[2];
 		sserial_response.data[48+4]=__DATE__[9];
 		sserial_response.data[48+5]=__DATE__[10];
-		#ifndef IS_BOOTLOADER
-			for (byte i=0; i<16; i++)
-			{
-				sserial_response.data[54+i]=sserial_bootname[i];
-			}
-
-		#endif
-			for (byte i=0; i<6; i++)
-			{
-				sserial_response.data[70+i]=SSERIAL_VERSION[i];
-			}		
+		for (byte i=0; i<16; i++)
+		{
+			sserial_response.data[54+i]=sserial_bootname[i];
+		}	
+		for (byte i=0; i<6; i++)
+		{
+			sserial_response.data[70+i]=SSERIAL_VERSION[i];
+		}		
 		sserial_response.datalength=86;
 		sserial_send_response();
 		return 1;
@@ -262,13 +269,14 @@ char sserial_process_internal()
 	return 0;
 }
 
-void sserial_poll_uart()
+void sserial_poll_uart(unsigned char portindex)
 {
+	sserial_portindex=portindex;
 	sserial_send_end();
-	if (uart_received())
+	if (uart_received(sserial_portindex))
 	{
 		static byte lastbyte;
-		byte currbyte=uart_get();
+		byte currbyte=uart_get(sserial_portindex);
 		
 		if (sserial_buffer_pointer>=SSERIAL_BUFFER_SIZE){sserial_buffer_pointer=SSERIAL_BUFFER_SIZE-1;sserial_buffer_overflow=1;}
 		

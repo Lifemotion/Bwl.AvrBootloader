@@ -19,7 +19,7 @@ unsigned char dev_name[16];
 unsigned char dev_guid[16];	
 } bootloader=
 {
-"BwlBootV1.4:    ",
+"BwlBootV1.5:    ",
 DEV_NAME,
 DEV_GUID
 };
@@ -83,12 +83,36 @@ void sserial_process_request()
 	}
 }
 
+void bootloader_poll_uart()
+{
+	sserial_poll_uart(0);
+	#ifdef UDR1
+	sserial_poll_uart(1);
+	#endif
+	#ifdef UDR2
+	sserial_poll_uart(2);
+	sserial_poll_uart(3);
+	#endif
+}
+
+void bootloader_init_uart()
+{
+	uart_init_withdivider(0,UBRR_VALUE);
+	#ifdef UDR1
+	uart_init_withdivider(1,UBRR_VALUE);
+	#endif
+	#ifdef UDR2
+	uart_init_withdivider(2,UBRR_VALUE);
+	uart_init_withdivider(3,UBRR_VALUE);
+	#endif
+}
+
 void bootloader_run_sometime()
 {
 	for (byte j=0; j<BOOTLOADER_TIME; j++)
 	for (bootloader_run_time=0; bootloader_run_time<10000l; bootloader_run_time++)
-	{
-		sserial_poll_uart();
+{
+		bootloader_poll_uart();
 		_delay_us(100);
 		wdt_reset();
 	}
@@ -97,7 +121,7 @@ void bootloader_run_sometime()
 void bootloader_run_infinite()
 {
 	{
-		sserial_poll_uart();
+		bootloader_poll_uart();
 		_delay_us(100);
 		wdt_reset();
 	}while(1);
@@ -106,7 +130,7 @@ void bootloader_run_infinite()
 int main(void)
 {	
 	wdt_enable(WDTO_2S);
-	uart_init_withdivider(UBRR_VALUE);
+	bootloader_init_uart();
 	for (byte i=0; i<16; i++)
 	{
 		sserial_devname[i]=bootloader.dev_prod[i];

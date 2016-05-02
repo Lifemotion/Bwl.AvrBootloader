@@ -28,14 +28,38 @@ void sserial_process_request()
 	}
 }
 
+void poll_uart()
+{
+	sserial_poll_uart(0);
+	#ifdef UDR1
+	sserial_poll_uart(1);
+	#endif
+	#ifdef UDR2
+	sserial_poll_uart(2);
+	sserial_poll_uart(3);
+	#endif
+}
+
+void init_uart()
+{
+	uart_init_withdivider(0,UBRR_VALUE);
+	#ifdef UDR1
+	uart_init_withdivider(1,UBRR_VALUE);
+	#endif
+	#ifdef UDR2
+	uart_init_withdivider(2,UBRR_VALUE);
+	uart_init_withdivider(3,UBRR_VALUE);
+	#endif
+}
+
 int main(void)
 {
 	wdt_enable(WDTO_4S);
 	sserial_find_bootloader();
-	uart_init_withdivider(UBRR_VALUE);
+	init_uart();
 	while(1)
 	{
-		sserial_poll_uart();
+		poll_uart();
 		wdt_reset();
 	}
 }
