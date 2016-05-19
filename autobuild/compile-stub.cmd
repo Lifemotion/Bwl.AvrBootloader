@@ -2,6 +2,7 @@ call paths.cmd
 echo off
 cls
 copy %FILENAME%.elf %FILENAME%.elf.bak
+del %FILENAME%.elf /q
 del *.elf /q
 cd ..
 cd Bwl.SimplSerial.AvrBootLoader
@@ -21,11 +22,9 @@ goto end
 
 :fail
 echo.
-echo ### Error! Try to build with Atmel Studio 6.2 First ###
+echo ### Error! Try to build with Atmel Studio 7.0 First ###
 goto end
 
 :end
 cd ..\..
 cd autobuild
-
-exit

@@ -1,3 +1,2 @@
-SET PATH=C:\Program Files (x86)\Atmel\Atmel Studio 6.2\shellUtils;C:\Program Files (x86)\Atmel\Atmel Studio 6.2\atbackend;C:\Program Files\Atmel\Atmel Studio 6.2\shellUtils;C:\Program Files\Atmel\Atmel Studio 6.2\atbackend;
+SET PATH=C:\Program Files (x86)\Atmel\Studio\7.0\shellutils;C:\Program Files (x86)\Atmel\Studio\7.0\atbackend;
 echo off
-cls
