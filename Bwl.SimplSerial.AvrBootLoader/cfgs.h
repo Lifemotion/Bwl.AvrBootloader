@@ -2,6 +2,9 @@
 #undef __AVR_ATmega328P__
 #undef __AVR_ATmega88PA__
 #undef __AVR_ATmega324PA__
+#undef __AVR_ATmega324A__
+#undef __AVR_ATmega324P__
+#undef __AVR_ATmega324__
 #undef __AVR_ATmega2560__
 
 #ifdef CFG_M328_GENERIC
@@ -82,6 +85,26 @@
 	#define TX_END_MACRO 	{};
 	#define FUSES_VALUE   {0xDE,0x82,0xFD }// low high extended
 	#pragma message "Loader for generic ATMega2560 8MHz, 9.6kHz, 10 sec"
+	//BODLEVEL = 2V7
+	//JTAGEN = [X]
+	//WDTON = [X]
+	//EESAVE = [X]
+	//BOOTSZ = 2048W_1F800
+	//BOOTRST = [X]
+	//SUT_CKSEL = EXTXOSC_8MHZ_XX_258CK_65MS
+#endif
+
+#ifdef CFG_M2560_GENERIC_16MHZ
+	#define __AVR_ATmega2560__
+	#define CFG CFG_M2560_GENERIC
+	#define F_CPU 16000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "Mega2560-16MHz"
+	#define TX_START_MACRO 	{};
+	#define TX_END_MACRO 	{};
+	#define FUSES_VALUE   {0xDE,0x82,0xFD }// low high extended
+	#pragma message "Loader for generic ATMega2560 16MHz, 9.6kHz, 10 sec"
 	//BODLEVEL = 2V7
 	//JTAGEN = [X]
 	//WDTON = [X]
