@@ -1,10 +1,10 @@
 /*
- * Bwl UART lib for AVR: mega48/88/168/328
+ * Bwl UART lib for AVR: mega48/88/168/328/324/164/2560/1280
  *
  * Author: Igor Koshelev and others
  * Licensed: open-source Apache license
  *
- * Version: 29.07.2015
+ * Version: 01.07.2016
  */ 
 
 #ifndef BWL_UART_H_

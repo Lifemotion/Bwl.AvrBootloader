@@ -6,6 +6,7 @@
  *
  * Version: 01.05.2016 V1.5.0
  */ 
+
 #ifndef BWL_GAPUART_H_
 #define BWL_GAPUART_H_
 

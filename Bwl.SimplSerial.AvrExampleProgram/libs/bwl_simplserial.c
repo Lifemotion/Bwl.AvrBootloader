@@ -29,7 +29,6 @@ void sserial_append_devname(byte startIndex, byte length, char* newname)
 	}
 }
 
-
 #ifdef __AVR_ATmega2560__
 #define PGM_READ_BYTE pgm_read_byte_far
 #else
@@ -74,8 +73,6 @@ void sserial_set_devname(const char* devname)
 		sserial_devname[i]=devname[i];
 	}
 }
-
-
 
 void sserial_sendbyte(byte bt)
 {
@@ -324,5 +321,4 @@ void sserial_poll_uart(unsigned char portindex)
 		}
 		lastbyte=currbyte;
 	}
-	
 }
