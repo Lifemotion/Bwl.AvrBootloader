@@ -1,5 +1,5 @@
 #define BAUD 9600
-#define F_CPU 16000000UL
+#define F_CPU 8000000UL
 #include <util/setbaud.h>
 #include <util/delay.h>
 
@@ -7,10 +7,14 @@
 #include "libs/bwl_simplserial.h"
 
 void sserial_send_start()
-{}
+{
+	DDRA|=(1<<3);PORTA|=(1<<3);
+}
 
 void sserial_send_end()
-{}
+{
+	DDRA|=(1<<3);PORTA&=(~(1<<3));
+}
 	
 void var_delay_ms(int ms)
 {

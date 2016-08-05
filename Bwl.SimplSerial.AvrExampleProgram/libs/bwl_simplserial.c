@@ -230,12 +230,16 @@ char sserial_process_internal()
 			DDRB=	mask (DDRB ,sserial_request.data[4],sserial_request.data[6]);
 			PORTB=	mask (PORTB,sserial_request.data[5],sserial_request.data[6]);
 			
+			#ifdef DDRC
 			DDRC=	mask (DDRC ,sserial_request.data[7],sserial_request.data[9]);
 			PORTC=	mask (PORTC,sserial_request.data[8],sserial_request.data[9]);
+			#endif
 			
+			#ifdef DDRD
 			DDRD=	mask (DDRD ,sserial_request.data[10],sserial_request.data[12]);
 			PORTD=	mask (PORTD ,sserial_request.data[11],sserial_request.data[12]);
-		
+			#endif
+			
 			/*DDRB=	sserial_request.data[4];
 			PORTB=	sserial_request.data[5];
 			
@@ -251,13 +255,17 @@ char sserial_process_internal()
 			sserial_response.data[5]=PORTB;
 			sserial_response.data[6]=PINB;
 			
+			#ifdef DDRC
 			sserial_response.data[7]=DDRC;
 			sserial_response.data[8]=PORTC;
 			sserial_response.data[9]=PINC;
+			#endif
 			
+			#ifdef DDRD
 			sserial_response.data[10]=DDRD;
 			sserial_response.data[11]=PORTD;
 			sserial_response.data[12]=PIND;
+			#endif
 		}
 		sserial_response.datalength=16;
 		sserial_send_response();
