@@ -6,12 +6,12 @@
 #include "libs/bwl_uart.h"
 #include "libs/bwl_simplserial.h"
 
-void sserial_send_start()
+void sserial_send_start(unsigned char portindex)
 {
 	DDRA|=(1<<3);PORTA|=(1<<3);
 }
 
-void sserial_send_end()
+void sserial_send_end(unsigned char portindex)
 {
 	DDRA|=(1<<3);PORTA&=(~(1<<3));
 }
@@ -22,7 +22,7 @@ void var_delay_ms(int ms)
 }
 
 
-void sserial_process_request()
+void sserial_process_request(unsigned char portindex)
 {
 	if (sserial_request.command==1)
 	{

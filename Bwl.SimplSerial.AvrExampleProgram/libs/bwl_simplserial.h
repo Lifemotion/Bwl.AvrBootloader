@@ -6,7 +6,6 @@
  *
  * Version: 01.05.2016 V1.5.0
  */ 
-
 #ifndef BWL_GAPUART_H_
 #define BWL_GAPUART_H_
 
@@ -22,8 +21,8 @@ byte sserial_bootloader_present;
 byte sserial_portindex;
 uint16_t sserial_address;
 
-#define SSERIAL_VERSION "V1.5.0"
-#define CATUART_MAX_PACKET_LENGTH 32
+#define SSERIAL_VERSION "V1.6.0"
+#define CATUART_MAX_PACKET_LENGTH 128
 
 struct
 {
@@ -41,9 +40,9 @@ struct
 } sserial_response;
 
 //должны быть реализованы
-extern void sserial_send_start();
-extern void sserial_send_end();
-extern void sserial_process_request();
+extern void sserial_send_start(unsigned char portindex);
+extern void sserial_send_end(unsigned char portindex);
+extern void sserial_process_request(unsigned char portindex);
 void uart_send(unsigned char, unsigned char);
 unsigned char uart_get( unsigned char );
 unsigned char uart_received( unsigned char );
@@ -55,6 +54,7 @@ void sserial_send_response();
 void sserial_find_bootloader();
 void sserial_append_devname(byte startIndex, byte length, char* newname);
 void sserial_set_devname(const char* devname);
+char sserial_send_request_wait_response(unsigned char portindex, int wait_ms );
 
 #endif /* BWL_GAPUART_H_ */
 

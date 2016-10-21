@@ -31,12 +31,12 @@ void var_delay_ms(int ms)
 
 FUSES = FUSES_VALUE;
 
-void sserial_send_start(){TX_START_MACRO}
-void sserial_send_end(){TX_END_MACRO}
+void sserial_send_start(unsigned char portindex){TX_START_MACRO}
+void sserial_send_end(unsigned char portindex){TX_END_MACRO}
 
 volatile int bootloader_run_time=0;
 
-void sserial_process_request()
+void sserial_process_request(unsigned char portindex)
 {
 	int page=((sserial_request.data[0]<<8)+sserial_request.data[1]);
 	long pageaddr=SPM_PAGESIZE*page;

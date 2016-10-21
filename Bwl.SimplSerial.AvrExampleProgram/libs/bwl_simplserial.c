@@ -29,6 +29,7 @@ void sserial_append_devname(byte startIndex, byte length, char* newname)
 	}
 }
 
+
 #ifdef __AVR_ATmega2560__
 #define PGM_READ_BYTE pgm_read_byte_far
 #else
@@ -85,7 +86,7 @@ void sserial_sendbyte(byte bt)
 
 void sserial_send_response ()
 {
-	sserial_send_start();
+	sserial_send_start(sserial_portindex);
 	uart_send(sserial_portindex,0);
 	uart_send(sserial_portindex,0);
 	uart_send(sserial_portindex,0x98);
@@ -106,7 +107,7 @@ void sserial_send_response ()
 	uart_send(sserial_portindex,0);
 	uart_send(sserial_portindex,0);
 	uart_send(sserial_portindex,0);
-	sserial_send_end();
+	sserial_send_end(sserial_portindex);
 }
 
 byte mask(byte current, byte newval ,byte mask)
@@ -239,7 +240,7 @@ char sserial_process_internal()
 			DDRD=	mask (DDRD ,sserial_request.data[10],sserial_request.data[12]);
 			PORTD=	mask (PORTD ,sserial_request.data[11],sserial_request.data[12]);
 			#endif
-			
+		
 			/*DDRB=	sserial_request.data[4];
 			PORTB=	sserial_request.data[5];
 			
@@ -274,10 +275,92 @@ char sserial_process_internal()
 	return 0;
 }
 
+char sserial_send_request_wait_response(unsigned char portindex, int wait_ms )
+{
+	//send request
+	sserial_send_start(portindex);
+	uart_send(portindex,0);
+	uart_send(portindex,0);
+	uart_send(portindex,0);
+	uart_send(portindex,0x98);
+	uart_send(portindex,0x01);
+	sserial_crc16=0xFFFF;
+	sserial_sendbyte(sserial_request.address_to>>8);
+	sserial_sendbyte(sserial_request.address_to&255);
+	sserial_sendbyte(sserial_request.command);
+	for (unsigned int i=0; i< sserial_request.datalength; i++)
+	{
+		sserial_sendbyte(sserial_request.data[i]);
+	}
+	uint16_t crc=sserial_crc16;
+	sserial_sendbyte(crc>>8);
+	sserial_sendbyte(crc&255);
+	uart_send(portindex,0x98);
+	uart_send(portindex,0x02);
+	uart_send(portindex,0);
+	uart_send(portindex,0);
+	uart_send(portindex,0);
+	sserial_send_end(portindex);		
+	//wait response
+	volatile unsigned long limit=wait_ms*100;
+	volatile unsigned long counter=0;
+
+	byte lastbyte=0;
+	while ((counter++)<limit)
+	{
+		if (uart_received(portindex))
+		{
+			byte currbyte=uart_get(portindex);
+			
+			if (sserial_buffer_pointer>=SSERIAL_BUFFER_SIZE){sserial_buffer_pointer=SSERIAL_BUFFER_SIZE-1;sserial_buffer_overflow=1;}
+			
+			if (lastbyte==0x98)
+			{
+				switch (currbyte)
+				{
+					case 0x00:
+					sserial_buffer[sserial_buffer_pointer++]=0x98;
+					break;
+					case 0x03:
+					sserial_buffer_pointer=0;
+					sserial_buffer_overflow=0;
+					break;	
+					case 0x04:
+					if ((sserial_buffer_overflow==0)&&(sserial_buffer_pointer>4))
+					{
+						uint16_t real_crc16=0xFFFF;
+						for (unsigned int i=0; i<sserial_buffer_pointer-2; i++)
+						{real_crc16=_crc16_update(real_crc16,sserial_buffer[i]);}		
+						uint16_t recv_crc16=(sserial_buffer[sserial_buffer_pointer-2]<<8)+sserial_buffer[sserial_buffer_pointer-1];
+						if (recv_crc16==real_crc16)
+						{
+							//uint16_t addr=(sserial_buffer[0]<<8)+(sserial_buffer[1]);
+							//sserial_response.address_to=addr;
+							sserial_response.result=sserial_buffer[2];
+							sserial_response.datalength=sserial_buffer_pointer-5;
+							for (unsigned int i=3; i<sserial_buffer_pointer-2; i++)
+							{
+								sserial_response.data[i-3]=sserial_buffer[i];
+							}
+							return 1;
+						}
+					}					
+				}
+			}else
+			{
+				if (currbyte!=0x98)
+				sserial_buffer[sserial_buffer_pointer++]=currbyte;
+			}
+			lastbyte=currbyte;
+		}
+	}
+	return 0;
+}
+
 void sserial_poll_uart(unsigned char portindex)
 {
 	sserial_portindex=portindex;
-	sserial_send_end();
+	sserial_send_end(portindex);
 	if (uart_received(sserial_portindex))
 	{
 		static byte lastbyte;
@@ -296,6 +379,7 @@ void sserial_poll_uart(unsigned char portindex)
 				sserial_buffer_pointer=0;
 				sserial_buffer_overflow=0;
 				break;
+				
 				case 0x02:
 				if ((sserial_buffer_overflow==0)&&(sserial_buffer_pointer>4))
 				{
@@ -316,7 +400,7 @@ void sserial_poll_uart(unsigned char portindex)
 							{
 								sserial_request.data[i-3]=sserial_buffer[i];
 							}
-							if (sserial_process_internal()==0){	sserial_process_request();}
+							if (sserial_process_internal()==0){	sserial_process_request(portindex);}
 						}
 					}
 				}
@@ -329,4 +413,5 @@ void sserial_poll_uart(unsigned char portindex)
 		}
 		lastbyte=currbyte;
 	}
+	
 }
