@@ -47,8 +47,8 @@
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
 	#define DEV_NAME "Mega324-8MHz"
-	#define TX_START_MACRO 	DDRB|=(1<<6);PORTB|=(1<<6);
-	#define TX_END_MACRO 	DDRB|=(1<<6);PORTB&=(~(1<<6));
+	#define TX_START_MACRO 	{};
+	#define TX_END_MACRO 	{};
 	#define FUSES_VALUE   {0xDE,0x88,0xFD }// low high extended
 	#pragma message "Loader for generic ATMega328PA 8MHz, 9.6kHz, 10 sec"
 	//BODLEVEL = 2V7
@@ -68,10 +68,23 @@
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
 	#define DEV_NAME "Mega324-16MHz"
-	#define TX_START_MACRO 	DDRA|=(1<<5);PORTA|=(1<<5);
-	#define TX_END_MACRO 	DDRA|=(1<<5);PORTA&=(~(1<<5));
+	#define TX_START_MACRO 	{};
+	#define TX_END_MACRO 	{};
 	#define FUSES_VALUE   {0xDE,0x88,0xFD }// low high extended
 	#pragma message "Loader for generic ATMega328PA 16MHz, 9.6kHz, 10 sec"
+#endif
+
+#ifdef CFG_ORLAN_POWERBOARD
+	#define __AVR_ATmega324PA__
+	#define CFG CFG_ORLAN_POWERBOARD
+	#define F_CPU 8000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "O.PowerBoard"
+	#define TX_START_MACRO 	DDRB|=(1<<6);PORTB|=(1<<6);
+	#define TX_END_MACRO 	DDRB|=(1<<6);PORTB&=(~(1<<6));
+	#define FUSES_VALUE   {0xDE,0x88,0xFD }// low high extended
+	#pragma message "Loader for PowerBoard ATMega328PA 8MHz, 9.6kHz, 10 sec"
 #endif
 
 #ifdef CFG_ORLAN_TIMESYNC
@@ -80,11 +93,24 @@
 	#define F_CPU 16000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
-	#define DEV_NAME "SyncTime board"
+	#define DEV_NAME "O.TimeSync"
 	#define TX_START_MACRO 	DDRA|=(1<<5);PORTA|=(1<<5);
 	#define TX_END_MACRO 	DDRA|=(1<<5);PORTA&=(~(1<<5));
 	#define FUSES_VALUE   {0xDE,0x88,0xFD }// low high extended
 	#pragma message "Loader for TimeSync 485 2.4 ATMega328PA 16MHz, 9.6kHz, 10 sec"
+#endif
+
+#ifdef CFG_ORLAN_SENSORBOARD
+	#define __AVR_ATmega2560__
+	#define CFG CFG_ORLAN_SENSORBOARD
+	#define F_CPU 8000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "O.Sensor"
+	#define TX_START_MACRO 	DDRC|=(1<<4);PORTC|=(1<<4);
+	#define TX_END_MACRO 	DDRC|=(1<<4);PORTC&=(~(1<<4));
+	#define FUSES_VALUE   {0xDE,0x82,0xFD }// low high extended
+	#pragma message "Loader for SensorBoard ATMega2560 8MHz, 9.6kHz, 10 sec"
 #endif
 
 #ifdef CFG_M2560_GENERIC
@@ -93,9 +119,9 @@
 	#define F_CPU 8000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
-	#define DEV_NAME "Sensor board"
-	#define TX_START_MACRO 	DDRC|=(1<<4);PORTC|=(1<<4);
-	#define TX_END_MACRO 	DDRC|=(1<<4);PORTC&=(~(1<<4));
+	#define DEV_NAME "Mega2560-8MHz"
+	#define TX_START_MACRO	{};
+	#define TX_END_MACRO 	{};
 	#define FUSES_VALUE   {0xDE,0x82,0xFD }// low high extended
 	#pragma message "Loader for generic ATMega2560 8MHz, 9.6kHz, 10 sec"
 	//BODLEVEL = 2V7
