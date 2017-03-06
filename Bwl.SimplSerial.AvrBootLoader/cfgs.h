@@ -67,11 +67,24 @@
 	#define F_CPU 16000000UL
 	#define BAUD 9600
 	#define BOOTLOADER_TIME 10
-	#define DEV_NAME "SyncTime board"
+	#define DEV_NAME "Mega324-16MHz"
 	#define TX_START_MACRO 	DDRA|=(1<<5);PORTA|=(1<<5);
 	#define TX_END_MACRO 	DDRA|=(1<<5);PORTA&=(~(1<<5));
 	#define FUSES_VALUE   {0xDE,0x88,0xFD }// low high extended
 	#pragma message "Loader for generic ATMega328PA 16MHz, 9.6kHz, 10 sec"
+#endif
+
+#ifdef CFG_ORLAN_TIMESYNC
+	#define __AVR_ATmega324PA__
+	#define CFG CFG_ORLAN_TIMESYNC
+	#define F_CPU 16000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "SyncTime board"
+	#define TX_START_MACRO 	DDRA|=(1<<5);PORTA|=(1<<5);
+	#define TX_END_MACRO 	DDRA|=(1<<5);PORTA&=(~(1<<5));
+	#define FUSES_VALUE   {0xDE,0x88,0xFD }// low high extended
+	#pragma message "Loader for TimeSync 485 2.4 ATMega328PA 16MHz, 9.6kHz, 10 sec"
 #endif
 
 #ifdef CFG_M2560_GENERIC
