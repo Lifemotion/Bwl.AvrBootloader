@@ -111,7 +111,7 @@ void bootloader_run_sometime()
 {
 	for (byte j=0; j<BOOTLOADER_TIME; j++)
 	for (bootloader_run_time=0; bootloader_run_time<10000l; bootloader_run_time++)
-{
+    {
 		bootloader_poll_uart();
 		_delay_us(100);
 		wdt_reset();
