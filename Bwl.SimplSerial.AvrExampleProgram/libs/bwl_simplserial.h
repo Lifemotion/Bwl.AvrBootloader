@@ -22,7 +22,7 @@ byte sserial_portindex;
 uint16_t sserial_address;
 
 #define SSERIAL_VERSION "V1.6.0"
-#define CATUART_MAX_PACKET_LENGTH 128
+#define CATUART_MAX_PACKET_LENGTH 160
 
 struct
 {

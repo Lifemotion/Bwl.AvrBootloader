@@ -14,14 +14,14 @@
 
 volatile struct
 {
-unsigned char dev_prod[16];
-unsigned char dev_name[16];
-unsigned char dev_guid[16];	
+	unsigned char dev_prod[16];
+	unsigned char dev_name[16];
+	unsigned char dev_guid[16];
 } bootloader=
 {
-"BwlBootV1.5:    ",
-DEV_NAME,
-DEV_GUID
+	"BwlBootV1.6:    ",
+	DEV_NAME,
+	DEV_GUID
 };
 
 void var_delay_ms(int ms)
@@ -55,7 +55,7 @@ void sserial_process_request(unsigned char portindex)
 		sserial_response.data[19]=(FLASHEND>>8)&255;
 		sserial_response.data[20]=FLASHEND&255;
 		
-		sserial_response.datalength=22;		
+		sserial_response.datalength=22;
 		sserial_send_response();
 	}
 
@@ -65,6 +65,7 @@ void sserial_process_request(unsigned char portindex)
 		boot_spm_busy_wait ();
 		sserial_send_response();
 	}
+
 	if (sserial_request.command==104)
 	{
 		long wordoffset=((sserial_request.data[2]<<8)+sserial_request.data[3]);
@@ -79,6 +80,29 @@ void sserial_process_request(unsigned char portindex)
 	{
 		boot_page_write_safe(pageaddr);
 		boot_spm_busy_wait ();
+		sserial_send_response();
+	}
+	
+	//fastmode erase all
+	if (sserial_request.command==110)
+	{
+		for (long i=0; i<FLASHEND-4096; i+=SPM_PAGESIZE)
+		{
+			wdt_reset();
+			boot_page_erase_safe(i);
+		}
+		boot_spm_busy_wait ();
+		sserial_send_response();
+	}
+	//fast mode fill
+	if (sserial_request.command==108)
+	{
+		long wordoffset=((sserial_request.data[2]<<8)+sserial_request.data[3]);
+		for (byte i=0; i<sserial_request.datalength-4; i+=2)
+		{
+			uint16_t word1=(sserial_request.data[5+i]<<8)+(sserial_request.data[4+i]);
+			boot_page_fill_safe(pageaddr+wordoffset+i,word1);
+		}
 		sserial_send_response();
 	}
 }
@@ -111,7 +135,7 @@ void bootloader_run_sometime()
 {
 	for (byte j=0; j<BOOTLOADER_TIME; j++)
 	for (bootloader_run_time=0; bootloader_run_time<10000l; bootloader_run_time++)
-    {
+	{
 		bootloader_poll_uart();
 		_delay_us(100);
 		wdt_reset();
@@ -128,7 +152,7 @@ void bootloader_run_infinite()
 }
 
 int main(void)
-{	
+{
 	wdt_enable(WDTO_2S);
 	bootloader_init_uart();
 	for (byte i=0; i<16; i++)
