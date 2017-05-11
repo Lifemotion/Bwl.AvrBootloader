@@ -5,6 +5,7 @@
 #include <avr/wdt.h>
 #include <util/setbaud.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 
 #define IS_BOOTLOADER
 #include "../Bwl.SimplSerial.AvrExampleProgram/libs/bwl_uart.c"
@@ -153,6 +154,7 @@ void bootloader_run_infinite()
 
 int main(void)
 {
+	cli();
 	wdt_enable(WDTO_2S);
 	bootloader_init_uart();
 	for (byte i=0; i<16; i++)
