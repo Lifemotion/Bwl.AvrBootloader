@@ -74,6 +74,19 @@
 	#pragma message "Loader for generic ATMega328PA 16MHz, 9.6kHz, 10 sec"
 #endif
 
+#ifdef CFG_KOLIBRI
+	#define __AVR_ATmega324PA__
+	#define CFG CFG_KOLIBRI
+	#define F_CPU 16000000UL
+	#define BAUD 9600
+	#define BOOTLOADER_TIME 10
+	#define DEV_NAME "O.Kolibri"
+	#define TX_START_MACRO 	{};
+	#define TX_END_MACRO 	{};
+	#define FUSES_VALUE   {0xDE,0x88,0xFD }// low high extended
+	#pragma message "Loader for Kolibri ATMega328PA 16MHz, 9.6kHz, 10 sec"
+#endif
+
 #ifdef CFG_ORLAN_POWERBOARD
 	#define __AVR_ATmega324PA__
 	#define CFG CFG_ORLAN_POWERBOARD
@@ -111,6 +124,19 @@
 	#define TX_END_MACRO 	DDRC|=(1<<4);PORTC&=(~(1<<4));
 	#define FUSES_VALUE   {0xDE,0x82,0xFD }// low high extended
 	#pragma message "Loader for SensorBoard ATMega2560 8MHz, 38.4kHz, 10 sec"
+#endif
+
+#ifdef CFG_ORLAN_POWERBOARD_V3
+#define __AVR_ATmega2560__
+#define CFG CFG_ORLAN_POWERBOARD_V3
+#define F_CPU 16000000UL
+#define BAUD 38400
+#define BOOTLOADER_TIME 10
+#define DEV_NAME "O.PowerV3"
+#define TX_START_MACRO 	DDRE|=(1<<4);PORTE|=(1<<4);
+#define TX_END_MACRO 	DDRE|=(1<<4);PORTE&=(~(1<<4));
+#define FUSES_VALUE   {0xDE,0x82,0xFD }// low high extended
+#pragma message "Loader for PowerBoard V3 with Sensors ATMega2560 16MHz, 38.4kHz, 10 sec"
 #endif
 
 #ifdef CFG_M2560_GENERIC
