@@ -1,5 +1,3 @@
-#include "cfgs.h"
-
 #include <avr/boot.h>
 #include <avr/io.h>
 #include <avr/wdt.h>

@@ -36,6 +36,7 @@ void sserial_append_devname(byte startIndex, byte length, char* newname)
 #define PGM_READ_BYTE pgm_read_byte_near
 #endif
 
+#ifndef	IS_BOOTLOADER
 void sserial_find_bootloader()
 {
 	byte found=0;
@@ -65,6 +66,7 @@ void sserial_find_bootloader()
 	}
 	sserial_bootloader_present=found;
 }
+#endif
 
 void sserial_set_devname(const char* devname)
 {

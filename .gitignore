@@ -10,3 +10,12 @@ guid
 *.log1
 *.log2
 &.log
+*.d
+*.o
+*.eep
+*.hex
+*.lss
+*.map
+*.srec
+*.mk
+Makefile
