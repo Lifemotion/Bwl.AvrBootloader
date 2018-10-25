@@ -1,25 +1,28 @@
 /*
- * Bwl UART lib for AVR: mega48/88/168/328/324/164/2560/1280
- *
- * Author: Igor Koshelev and others
- * Licensed: open-source Apache license
- *
- * Version: 01.07.2016
- */ 
+* Bwl UART lib for AVR: mega48/88/168/328/324/164/2560/1280
+*
+* Author: Igor Koshelev and others
+* Licensed: open-source Apache license
+*
+* Version: 25.10.2017
+*/
 
 #include <avr/io.h>
 #include "bwl_uart.h"
 
 void uart_init_withdivider_x2(unsigned char port, unsigned int ubrr)
 {
-	if (port==0)
-	{
-		UBRR0H = (unsigned char)(ubrr>>8);
-		UBRR0L = (unsigned char)ubrr;
-		UCSR0A = (1<<U2X0);
-		UCSR0B = (1<<RXEN0)|(1<<TXEN0);
-		UCSR0C = (0<<USBS0)|(3<<UCSZ00);
-	}
+	uart_init_withdivider(port,ubrr);
+	if (port==0)	{		UCSR0A = (1<<U2X0);	}
+	#ifdef UDR1
+	if (port==1)	{		UCSR1A = (1<<U2X1);	}
+	#endif
+	#ifdef UDR2
+	if (port==2)	{		UCSR2A = (1<<U2X2);	}
+	#endif
+	#ifdef UDR3
+	if (port==3)	{		UCSR3A = (1<<U2X3);	}
+	#endif
 }
 
 void uart_init_withdivider(unsigned char port, unsigned int ubrr)
@@ -39,8 +42,8 @@ void uart_init_withdivider(unsigned char port, unsigned int ubrr)
 		UBRR1L = (unsigned char)ubrr;
 		UCSR1A = (0<<U2X1);
 		UCSR1B = (1<<RXEN1)|(1<<TXEN1);
-		UCSR1C = (1<<USBS1)|(3<<UCSZ10);
-	}	
+		UCSR1C = (0<<USBS1)|(3<<UCSZ10);
+	}
 	#endif
 	#ifdef UDR2
 	if (port==2)
@@ -49,7 +52,7 @@ void uart_init_withdivider(unsigned char port, unsigned int ubrr)
 		UBRR2L = (unsigned char)ubrr;
 		UCSR2A = (0<<U2X2);
 		UCSR2B = (1<<RXEN2)|(1<<TXEN2);
-		UCSR2C = (1<<USBS2)|(3<<UCSZ20);
+		UCSR2C = (0<<USBS2)|(3<<UCSZ20);
 	}
 	#endif
 	#ifdef UDR3
@@ -59,8 +62,8 @@ void uart_init_withdivider(unsigned char port, unsigned int ubrr)
 		UBRR3L = (unsigned char)ubrr;
 		UCSR3A = (0<<U2X3);
 		UCSR3B = (1<<RXEN3)|(1<<TXEN3);
-		UCSR3C = (1<<USBS3)|(3<<UCSZ00);
-	}		
+		UCSR3C = (0<<USBS3)|(3<<UCSZ00);
+	}
 	#endif
 }
 
@@ -68,7 +71,7 @@ void uart_disable(unsigned char port)
 {
 	if (port==0){UCSR0B = (0<<RXEN0)|(0<<TXEN0);}
 	#ifdef UDR1
-	if (port==1){UCSR1B = (0<<RXEN1)|(0<<TXEN1);}	
+	if (port==1){UCSR1B = (0<<RXEN1)|(0<<TXEN1);}
 	#endif
 	#ifdef UDR2
 	if (port==2){UCSR2B = (0<<RXEN2)|(0<<TXEN2);}
@@ -81,7 +84,7 @@ void uart_disable(unsigned char port)
 void uart_send(const unsigned char port, unsigned char byte )
 {
 	if (port==0)
-	{	
+	{
 		while ( !( UCSR0A & (1<<UDRE0)) );
 		UDR0 = byte;
 	}
@@ -108,7 +111,7 @@ void uart_send(const unsigned char port, unsigned char byte )
 	#endif
 }
 
- unsigned char uart_received(unsigned char port)
+unsigned char uart_received(unsigned char port)
 {
 	if (port==0){	return (UCSR0A & (1<<RXC0));}
 	#ifdef UDR1
@@ -134,6 +137,6 @@ unsigned char uart_get(unsigned char port)
 	#endif
 	#ifdef UDR3
 	if (port==3){	return UDR3;}
-	#endif	
+	#endif
 	return 0;
 }

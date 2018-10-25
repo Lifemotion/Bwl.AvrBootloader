@@ -1,11 +1,12 @@
 /*
- * Bwl SimplSerial Lib
- *
- * Author: Igor Koshelev 
- * Licensed: open-source Apache license
- *
- * Version: 01.05.2016 V1.5.0
- */ 
+* Bwl SimplSerial Lib
+*
+* Author: Igor Koshelev
+* Licensed: open-source Apache license
+*
+* Version: 25.10.2018 V1.7.0
+*/
+
 #ifndef BWL_GAPUART_H_
 #define BWL_GAPUART_H_
 
@@ -21,7 +22,7 @@ byte sserial_bootloader_present;
 byte sserial_portindex;
 uint16_t sserial_address;
 
-#define SSERIAL_VERSION "V1.6.0"
+#define SSERIAL_VERSION "V1.7.0"
 #define CATUART_MAX_PACKET_LENGTH 160
 
 struct

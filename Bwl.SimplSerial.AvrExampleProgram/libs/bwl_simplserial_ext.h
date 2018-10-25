@@ -25,3 +25,8 @@
 #define GOTO_PROG 	asm volatile("jmp 0x00000"::);
 #define GOTO_BOOT 	asm volatile("jmp 0x3F000"::);
 #endif
+
+#if defined(__AVR_ATmega640__)
+#define GOTO_PROG 	asm volatile("jmp 0x0000"::);
+#define GOTO_BOOT 	asm volatile("jmp 0xF000"::);
+#endif
