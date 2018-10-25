@@ -18,7 +18,7 @@ volatile struct
 	unsigned char dev_guid[16];
 } bootloader=
 {
-	"BwlBootV1.6:    ",
+	"BwlBootV1.7:   ",
 	DEV_NAME,
 	DEV_GUID
 };
@@ -43,10 +43,19 @@ void sserial_process_request(unsigned char portindex)
 	sserial_response.datalength=1;
 	sserial_response.data[0]=0;
 	sserial_response.result=sserial_request.command+1;
-	bootloader_run_time=0;
 	
 	if (sserial_request.command==100)
 	{
+		bootloader_run_time=0;
+		/*sserial_response.data[0]=boot_signature_byte_get(0);
+		sserial_response.data[1]=boot_signature_byte_get(2);
+		sserial_response.data[2]=boot_signature_byte_get(4);
+		
+		sserial_response.data[3]=boot_lock_fuse_bits_get(0);
+		sserial_response.data[4]=boot_lock_fuse_bits_get(1);
+		sserial_response.data[5]=boot_lock_fuse_bits_get(2);
+		sserial_response.data[6]=boot_lock_fuse_bits_get(3);*/
+		
 		sserial_response.data[16]=SPM_PAGESIZE>>8;
 		sserial_response.data[17]=SPM_PAGESIZE&255;
 		
@@ -60,6 +69,7 @@ void sserial_process_request(unsigned char portindex)
 
 	if (sserial_request.command==102)
 	{
+		bootloader_run_time=0;
 		boot_page_erase_safe(pageaddr);
 		boot_spm_busy_wait ();
 		sserial_send_response();
@@ -67,6 +77,7 @@ void sserial_process_request(unsigned char portindex)
 
 	if (sserial_request.command==104)
 	{
+		bootloader_run_time=0;
 		long wordoffset=((sserial_request.data[2]<<8)+sserial_request.data[3]);
 		for (byte i=0; i<8; i+=2)
 		{
@@ -77,14 +88,28 @@ void sserial_process_request(unsigned char portindex)
 	}
 	if (sserial_request.command==106)
 	{
+		bootloader_run_time=0;
 		boot_page_write_safe(pageaddr);
 		boot_spm_busy_wait ();
 		sserial_send_response();
 	}
-	
+
+/*
+#if SPM_PAGESIZE==128
+#warning 128
+#endif 
+#if SPM_PAGESIZE==256
+#warning 256
+#endif
+#if FLASHEND==0x7FFF
+#warning 0x7FFF
+#endif
+*/
+ 
 	//fastmode erase all
 	if (sserial_request.command==110)
 	{
+		bootloader_run_time=0;
 		for (long i=0; i<FLASHEND-4096; i+=SPM_PAGESIZE)
 		{
 			wdt_reset();
@@ -96,6 +121,7 @@ void sserial_process_request(unsigned char portindex)
 	//fast mode fill
 	if (sserial_request.command==108)
 	{
+		bootloader_run_time=0;
 		long wordoffset=((sserial_request.data[2]<<8)+sserial_request.data[3]);
 		for (byte i=0; i<sserial_request.datalength-4; i+=2)
 		{
@@ -117,23 +143,23 @@ void bootloader_poll_uart()
 	sserial_poll_uart(3);
 	#endif
 }
-
+ 
 void bootloader_init_uart()
 {
-	uart_init_withdivider(0,UBRR_VALUE);
+	uart_init_withdivider_x2(0,GET_UBRR_X2(F_CPU, BAUD));
 	#ifdef UDR1
-	uart_init_withdivider(1,UBRR_VALUE);
+	uart_init_withdivider_x2(1,GET_UBRR_X2(F_CPU, BAUD));
 	#endif
 	#ifdef UDR2
-	uart_init_withdivider(2,UBRR_VALUE);
-	uart_init_withdivider(3,UBRR_VALUE);
+	uart_init_withdivider_x2(2,GET_UBRR_X2(F_CPU, BAUD));
+	uart_init_withdivider_x2(3,GET_UBRR_X2(F_CPU, BAUD));
 	#endif
 }
 
 void bootloader_run_sometime()
 {
-	for (byte j=0; j<BOOTLOADER_TIME; j++)
-	for (bootloader_run_time=0; bootloader_run_time<10000l; bootloader_run_time++)
+	for (bootloader_run_time=0; bootloader_run_time<BOOTLOADER_TIME; bootloader_run_time++)
+	for (int j=0; j<10000l; j++)
 	{
 		bootloader_poll_uart();
 		_delay_us(100);
@@ -153,7 +179,7 @@ void bootloader_run_infinite()
 int main(void)
 {
 	cli();
-	wdt_enable(WDTO_2S);
+	wdt_enable(WDTO_8S);
 	bootloader_init_uart();
 	for (byte i=0; i<16; i++)
 	{
