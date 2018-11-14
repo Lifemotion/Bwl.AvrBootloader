@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Atmel Studio Solution File, Format Version 11.00
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Bwl.SimplSerial.UniversalRemote.Avr", "Bwl.SimplSerial.UniversalRemote.Avr\Bwl.SimplSerial.UniversalRemote.Avr.cproj", "{16668DA3-9CC2-4193-AAF8-20937713C13E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16668DA3-9CC2-4193-AAF8-20937713C13E}.Debug|AVR.ActiveCfg = Debug|AVR
+		{16668DA3-9CC2-4193-AAF8-20937713C13E}.Debug|AVR.Build.0 = Debug|AVR
+		{16668DA3-9CC2-4193-AAF8-20937713C13E}.Release|AVR.ActiveCfg = Release|AVR
+		{16668DA3-9CC2-4193-AAF8-20937713C13E}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
